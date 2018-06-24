@@ -100,16 +100,21 @@ public class Sms_RV_ListAdapter extends
 
         @Override
         public void onClick(View v) {
+
+            String itemID = lblDate.getText().toString()
+                    .replace("/","_")
+                    .replace(":","_");
+
+
+            File idFolder = new File(IOHelper.getStorageDir(v.getContext()), itemID);
+            if (!idFolder.exists())
+                idFolder.mkdir();
+
+
+
             if (v.getId() == btnAdd.getId()) {
                 //Toast.makeText(v.getContext(), "Add " + lblDate.getText().toString(), Toast.LENGTH_SHORT).show();
-                String itemID = lblDate.getText().toString()
-                        .replace("/","_")
-                        .replace(":","_");
 
-
-                File idFolder = new File(IOHelper.getStorageDir(v.getContext()), itemID);
-                if (!idFolder.exists())
-                    idFolder.mkdir();
                 File imgFile = new File(idFolder,
                         new SimpleDateFormat("yyyy-MM-dd-HH-mm").format(new Date()) + ".png");
 
@@ -124,7 +129,24 @@ public class Sms_RV_ListAdapter extends
                 ((Activity)v.getContext()).startActivityForResult(intent, MainActivity.REQUEST_IMAGE_CAPTURE);
             }
             else {
-                Toast.makeText(v.getContext(), "Show " + lblDate.getText().toString(), Toast.LENGTH_SHORT).show();
+
+                Intent i = new Intent();
+                i.setAction(Intent.ACTION_VIEW);
+
+                // Between apps:
+                /*Uri photoFolderURI = FileProvider.getUriForFile(v.getContext(),
+                        "com.example.android.fileprovider",
+                        idFolder);*/
+
+                // My app:
+                Uri photoFolderURI = Uri.parse( idFolder.getAbsolutePath() + "/");
+
+                i.setDataAndType(photoFolderURI, "resource/folder");
+                //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                ((Activity)v.getContext()).startActivity(Intent.createChooser(i,"Open folder"));
+
+                //Toast.makeText(v.getContext(), "Show " + lblDate.getText().toString(), Toast.LENGTH_SHORT).show();
             }
         }
     }

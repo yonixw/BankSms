@@ -70,9 +70,6 @@ public class MainActivity extends AppCompatActivity {
         lstSms.setAdapter(new Sms_RV_ListAdapter(dataSet));
     }
 
-    public static String itemID  = null;
-
-
     static final int REQUEST_IMAGE_CAPTURE = 1;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
