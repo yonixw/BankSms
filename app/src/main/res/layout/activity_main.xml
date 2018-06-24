@@ -7,16 +7,20 @@
     android:visibility="visible"
     tools:context=".MainActivity">
 
-    <android.support.v7.widget.LinearLayoutCompat
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Enter filter list:"
-            android:textSize="24sp"/>
+            android:id="@+id/grpFilter">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter filter (;)"
+            android:textSize="20sp"/>
 
         <EditText
             android:id="@+id/txtFilters"
@@ -24,17 +28,28 @@
             android:layout_height="wrap_content"
             android:text="Isracard; ShebaOTP;"
             android:textAlignment="viewStart"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnGetAllSms"
             style="@android:style/Widget.Holo.Button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Process existing sms"
-            android:textAlignment="textStart"
             android:onClick="btnReadClick"
+            android:text=">>> Reaload SMS <<<"
+            android:textAlignment="center"
             />
-    </android.support.v7.widget.LinearLayoutCompat>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/lstSMS"
+            android:layout_width="match_parent"
+            android:scrollbars="vertical"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            >
+
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
