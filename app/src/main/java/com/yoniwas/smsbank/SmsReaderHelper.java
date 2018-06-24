@@ -34,7 +34,7 @@ public class SmsReaderHelper {
                     String body = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.BODY));
                     Date dateFormat= new Date(Long.valueOf(smsDate));
 
-                    String type;
+                    String type = "none";
                     switch (Integer.parseInt(c.getString(c.getColumnIndexOrThrow(Telephony.Sms.TYPE)))) {
                         case Telephony.Sms.MESSAGE_TYPE_INBOX:
                             type = "inbox";
@@ -49,7 +49,8 @@ public class SmsReaderHelper {
                             break;
                     }
 
-                    if (arrHas(names,number)) filteredSMS++;
+                    if (arrHas(names,number) && type == "inbox")
+                        filteredSMS++;
                     c.moveToNext();
                 }
             }
