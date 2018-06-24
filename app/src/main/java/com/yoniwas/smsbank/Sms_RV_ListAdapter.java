@@ -1,5 +1,10 @@
 package com.yoniwas.smsbank;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
@@ -10,7 +15,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class Sms_RV_ListAdapter extends
@@ -90,10 +97,31 @@ public class Sms_RV_ListAdapter extends
         }
 
 
+
         @Override
         public void onClick(View v) {
             if (v.getId() == btnAdd.getId()) {
-                Toast.makeText(v.getContext(), "Add " + lblDate.getText().toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(v.getContext(), "Add " + lblDate.getText().toString(), Toast.LENGTH_SHORT).show();
+                String itemID = lblDate.getText().toString()
+                        .replace("/","_")
+                        .replace(":","_");
+
+
+                File idFolder = new File(IOHelper.getStorageDir(v.getContext()), itemID);
+                if (!idFolder.exists())
+                    idFolder.mkdir();
+                File imgFile = new File(idFolder,
+                        new SimpleDateFormat("yyyy-MM-dd-HH-mm").format(new Date()) + ".png");
+
+
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                Uri photoURI = FileProvider.getUriForFile(v.getContext(),
+                        "com.example.android.fileprovider",
+                        imgFile);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+
+                ((Activity)v.getContext()).startActivityForResult(intent, MainActivity.REQUEST_IMAGE_CAPTURE);
             }
             else {
                 Toast.makeText(v.getContext(), "Show " + lblDate.getText().toString(), Toast.LENGTH_SHORT).show();
