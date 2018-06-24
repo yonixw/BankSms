@@ -68,6 +68,13 @@ public class Sms_RV_ListAdapter extends
         viewHolder.lblDate.setText(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(model.recieved));
 
 
+        // Show "Show pic" only if there are some pics
+        String itemID = new SimpleDateFormat("dd_MM_yyyy HH_mm").format(model.recieved);
+        File idFolder = new File(IOHelper.getStorageDir(viewHolder.btnShow.getContext()), itemID);
+        viewHolder.btnShow.setVisibility((idFolder.exists() && idFolder.listFiles().length > 0)
+                ? View.VISIBLE: View.INVISIBLE);
+
+
     }
 
     @Override
