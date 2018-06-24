@@ -35,7 +35,9 @@ public class Sms_RV_dataObj {
             int endStoreIndex = smsBody.indexOf(".", startStoreIndex);
             if (endStoreIndex > -1) {
                 try {
-                    store = smsBody.substring(startStoreIndex +1, endStoreIndex ); // +1 to avoid hebrew `Bet` char
+                    store = smsBody.substring(startStoreIndex , endStoreIndex );
+                    if (store.length() > 2)
+                        store = store.substring(2); // +2 to avoid hebrew `Bet` char
                 } catch (Exception ex) {
                     throw  ex;
                 }
