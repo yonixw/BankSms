@@ -3,10 +3,12 @@ package com.yoniwas.smsbank;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Build;
 import android.provider.Telephony;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -53,10 +55,11 @@ public class SmsReaderHelper {
                     }
 
                     if (arrHas(names,number) && type == "inbox") {
-                        filteredSMS++;
                         Sms_RV_dataObj smsData = new Sms_RV_dataObj(body, dateFormat);
-                        if (smsData.isValid)
+                        if (smsData.isValid){
                             result.add(smsData);
+                            filteredSMS++;
+                        }
                     }
                     c.moveToNext();
                 }
@@ -68,6 +71,14 @@ public class SmsReaderHelper {
             Toast.makeText(context, "No message was found at all!", Toast.LENGTH_SHORT).show();
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            result.sort(new Comparator<Sms_RV_dataObj>() {
+                @Override
+                public int compare(Sms_RV_dataObj o1, Sms_RV_dataObj o2) {
+                    return -o1.recieved.compareTo(o2.recieved);
+                }
+            });
+        }
         return  result;
     }
 }
