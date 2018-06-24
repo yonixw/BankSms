@@ -1,6 +1,7 @@
 package com.yoniwas.smsbank;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class Sms_RV_ListAdapter extends
@@ -54,7 +56,11 @@ public class Sms_RV_ListAdapter extends
             viewHolder.lblDate.getContext(),
             model.recieved.getTime(),
             DateUtils.FORMAT_ABBREV_ALL);
-        viewHolder.lblDate.setText(dateStr);
+        //viewHolder.lblDate.setText(dateStr);
+
+        viewHolder.lblDate.setText(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(model.recieved));
+
+
     }
 
     @Override
@@ -63,7 +69,7 @@ public class Sms_RV_ListAdapter extends
     }
 
     //ViewHolders are basically caches of your View objects
-    public final static class Sms_RV_ViewHolder extends RecyclerView.ViewHolder {
+    public final static class Sms_RV_ViewHolder extends RecyclerView.ViewHolder  implements  View.OnClickListener{
         TextView lblPrice, lblCurr, lblDate, lblStore;
         Button btnAdd, btnShow;
 
@@ -77,19 +83,21 @@ public class Sms_RV_ListAdapter extends
             btnAdd = (Button) itemView.findViewById(R.id.btnAddPic);
             btnShow = (Button) itemView.findViewById(R.id.btnShowPics);
 
-            btnAdd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(v.getContext(),"Add pic: " + lblDate.getText().toString(), Toast.LENGTH_SHORT);
-                }
-            });
+            btnAdd.setOnClickListener(this);
+            btnShow.setOnClickListener(this);
 
-            btnShow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(v.getContext(),"Show pics: " + lblDate.getText().toString(), Toast.LENGTH_SHORT);
-                }
-            });
+            //getAdapterPosition() //<== id in items
+        }
+
+
+        @Override
+        public void onClick(View v) {
+            if (v.getId() == btnAdd.getId()) {
+                Toast.makeText(v.getContext(), "Add " + lblDate.getText().toString(), Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(v.getContext(), "Show " + lblDate.getText().toString(), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
