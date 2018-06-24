@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.provider.Telephony;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,13 +18,15 @@ public class SmsReaderHelper {
         return  false;
     }
 
-    public static void getAllSms(Context context, String[] names) {
+    public static List<Sms_RV_dataObj> getAllSms(Context context, String[] names) {
 
         ContentResolver cr = context.getContentResolver();
         Cursor c = cr.query(Telephony.Sms.CONTENT_URI, null, null, null, null);
 
         int totalSMS = 0;
         int filteredSMS = 0;
+
+        List<Sms_RV_dataObj> result = new ArrayList<>();
 
         if (c != null) {
             totalSMS = c.getCount();
@@ -49,8 +52,12 @@ public class SmsReaderHelper {
                             break;
                     }
 
-                    if (arrHas(names,number) && type == "inbox")
+                    if (arrHas(names,number) && type == "inbox") {
                         filteredSMS++;
+                        Sms_RV_dataObj smsData = new Sms_RV_dataObj(body, dateFormat);
+                        if (smsData.isValid)
+                            result.add(smsData);
+                    }
                     c.moveToNext();
                 }
             }
@@ -60,6 +67,8 @@ public class SmsReaderHelper {
         } else {
             Toast.makeText(context, "No message was found at all!", Toast.LENGTH_SHORT).show();
         }
+
+        return  result;
     }
 }
 

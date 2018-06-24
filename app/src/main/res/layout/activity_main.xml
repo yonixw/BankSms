@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="btnReadClick"
-            android:text=">>> Reaload SMS <<<"
+            android:text=" Reaload SMS "
             android:textAlignment="center"
             />
 

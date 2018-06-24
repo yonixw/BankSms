@@ -13,12 +13,15 @@ public class Sms_RV_dataObj {
     public String currency;
     public Date recieved;
 
+    public boolean isValid = false;
+
     public  Sms_RV_dataObj(String smsBody, Date dateRecv) {
         recieved = dateRecv;
 
         String[] words  = smsBody.split(" ");
         if (words.length < 7)  {
             Log.e(TAG,"Less than 7 words. Body: " + smsBody);
+            return;
         }
 
         // There should always be a price and currency:
@@ -26,13 +29,20 @@ public class Sms_RV_dataObj {
         currency = words[7];
 
         // Try to find if store is specifiec. Search until end of sentence (ended with dot)
-        int startStoreIndex = smsBody.indexOf(price + " "+currency) + 1;
-        if (startStoreIndex > 0){
+        int startStoreIndex = smsBody.indexOf(price + " "+currency) ;
+        if (startStoreIndex > -1){
+            startStoreIndex += (price + " "+currency).length();
             int endStoreIndex = smsBody.indexOf(".", startStoreIndex);
             if (endStoreIndex > -1) {
-                store = smsBody.substring(startStoreIndex, endStoreIndex - startStoreIndex +1);
+                try {
+                    store = smsBody.substring(startStoreIndex +1, endStoreIndex ); // +1 to avoid hebrew `Bet` char
+                } catch (Exception ex) {
+                    throw  ex;
+                }
             }
         }
+
+        isValid = true;
 
     }
 }

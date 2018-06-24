@@ -1,13 +1,21 @@
 package com.yoniwas.smsbank;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.EditText;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     EditText txtboxFilters;
+    RecyclerView lstSms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,11 +23,40 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         txtboxFilters = (EditText)findViewById(R.id.txtFilters);
+        lstSms = (RecyclerView)findViewById(R.id.lstSMS);
+
+        InitRecycleView(this);
     }
 
 
 
     public void btnReadClick(View v) {
-        SmsReaderHelper.getAllSms(v.getContext(),txtboxFilters.getText().toString().split(";"));
+        FillRecycleView(v.getContext());
+    }
+
+
+    public void InitRecycleView(Context c) {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.scrollToPosition(0);
+        lstSms.setLayoutManager(layoutManager);
+
+        // allows for optimizations if all item views are of the same size:
+        lstSms.setHasFixedSize(true);
+
+        RecyclerView.ItemDecoration itemDecoration =
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        lstSms.addItemDecoration(itemDecoration);
+
+        // this is the default;
+        // this call is actually only necessary with custom ItemAnimators
+        lstSms.setItemAnimator(new DefaultItemAnimator());
+
+        FillRecycleView(c);
+    }
+
+    public void FillRecycleView(Context c){
+        List<Sms_RV_dataObj> dataSet = SmsReaderHelper.getAllSms(c,txtboxFilters.getText().toString().split(";"));
+        lstSms.setAdapter(new Sms_RV_ListAdapter(dataSet));
     }
 }
